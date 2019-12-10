@@ -1,0 +1,9 @@
+{
+    "env": {
+        "DB_NAME": "binaryict",
+        "DB_USER": "binaryict",
+        "DB_PASSWORD": "binaryict",
+        "JWT_PRIVATE": "helloworld",
+        "SERVER_PATH": ""
+    }
+}

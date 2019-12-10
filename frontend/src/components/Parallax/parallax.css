@@ -1,0 +1,25 @@
+.brandText {
+    position: absolute;
+    z-index: 100;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 6rem;
+    font-weight: 100;
+    letter-spacing: 2px;
+    text-align: center;
+    color: #f35626;
+    background-image: linear-gradient(92deg, #f35626, #feab3a);
+    background-clip: text;
+    animation: hue 10s infinite linear;
+}
+
+@keyframes hue {
+    from {
+        filter: hue-rotate(0deg);
+    }
+
+    to {
+        filter: hue-rotate(-360deg);
+    }
+}

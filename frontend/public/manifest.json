@@ -1,0 +1,8 @@
+{
+  "short_name": "Binary ice",
+  "name": "A Special Private ICT Program",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

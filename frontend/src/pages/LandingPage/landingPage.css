@@ -1,0 +1,21 @@
+.marquee {
+    /* display: flex; */
+    animation: move 60s infinite;
+    animation-timing-function: linear;
+}
+.marquee:hover {
+    animation-play-state: paused
+}
+
+@keyframes move {
+    0% {
+        top: 30vh;
+    }
+
+    50% {
+        top: -30vh;
+    }
+    100% {
+        top: 30vh;
+    }
+}
