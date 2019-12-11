@@ -5,7 +5,7 @@ const { sequelize } = require("./models/index");
 const RootSchema = require("./graphql/schemas/index");
 const RootResolver = require("./graphql/resolvers/index");
 const isAuth = require("./middleware/isAuth");
-const storage = require("@appgeist/storage");
+const storage = require("./storage");
 const path = require("path");
 // const Sequelize = require("sequelize");
 
