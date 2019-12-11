@@ -1,27 +1,25 @@
-const { notes } = require("../../models/index");
+const { chapters } = require("../models/index");
 
-
-module.exports = {
-  filterNotes: async args => {
+module.exports.resolver = {
+  allChapters: async (args, req) => {
     try {
-      const result = await notes.findAll({
-        where: {
-          chapterid: args.chapterid
-        }
-      });
+      const result = await chapters.findAll();
+      //   console.log(result);
       return result;
     } catch (err) {
       // console.log(err)
       throw err;
     }
   },
-
-  notes: async (args, req) => {
+  chapters: async (args, req) => {
     if (!req.isAuth) throw new Error("UnAuthenticated");
     const lim = args.size;
     const off = args.page * lim;
     try {
-      const result = await notes.findAndCountAll({ limit: lim, offset: off });
+      const result = await chapters.findAndCountAll({
+        limit: lim,
+        offset: off
+      });
       //   console.log(result);
       result.page = args.page;
       return result;
@@ -31,15 +29,13 @@ module.exports = {
     }
   },
 
-  editNotes: async (args, req) => {
+  editChapters: async (args, req) => {
     if (!req.isAuth) throw new Error("UnAuthenticated");
     const id = args.id;
     if (!id) {
       try {
-        return await notes.create({
-          chapterid: args.chapterid,
-          title: args.title,
-          file: args.file
+        return await chapters.create({
+          title: args.title
         });
       } catch (err) {
         // console.log(err)
@@ -47,11 +43,9 @@ module.exports = {
       }
     }
     try {
-      await notes.update(
+      await chapters.update(
         {
-          chapterid: args.chapterid,
-          title: args.title,
-          file: args.file
+          title: args.title
         },
         {
           where: {
@@ -65,10 +59,11 @@ module.exports = {
       throw err;
     }
   },
-  deleteNotes: async args => {
+  deleteChapters: async (args, req) => {
+    if (!req.isAuth) throw new Error("UnAuthenticated");
     const id = args.id;
     try {
-      const result = await notes.destroy({
+      const result = await chapters.destroy({
         where: {
           id: id
         }
@@ -80,4 +75,22 @@ module.exports = {
       throw err;
     }
   }
+};
+module.exports.schema = {
+  type: `
+  type chapters{
+    id: Int!
+    title: String
+}
+type chapterPaginate {
+    count : Int!
+    page: Int!
+    rows : [chapters]!
+}`,
+  query: `allChapters: [chapters]!
+  chapters(size: Int!,page: Int!) : chapterPaginate
+  `,
+  mutation: `editChapters(id: Int,title: String!): chapters
+  deleteChapters(id: Int!): Boolean
+  `
 };

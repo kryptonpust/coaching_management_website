@@ -1,6 +1,6 @@
-const { images } = require("../../models/index");
+const { images } = require("../models/index");
 
-module.exports = {
+module.exports.resolver = {
   filterImages: async args => {
     try {
       const result = await images.findAll({
@@ -78,4 +78,23 @@ module.exports = {
       throw err;
     }
   }
+};
+module.exports.schema = {
+  type: `
+  type images {
+    id: Int!
+    sessionid: Int!
+    link: String
+}
+type imagePaginate {
+    count : Int!
+    page: Int!
+    rows : [images]!
+}`,
+  query: `images(size: Int!,page: Int!) : imagePaginate
+  filterImages(sessionid: Int!): [images]!
+  `,
+  mutation: `editImages(id: Int,sessionid: Int!,link: String): images
+  deleteImages(src: String!): Boolean
+  `
 };

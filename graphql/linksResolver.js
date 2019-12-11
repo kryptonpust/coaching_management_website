@@ -1,7 +1,7 @@
-const { links } = require("../../models/index");
+const { links } = require("../models/index");
 
 
-module.exports = {
+module.exports.resolver = {
   filterLinks: async args => {
     try {
       const result = await links.findAll({
@@ -82,4 +82,24 @@ module.exports = {
       throw err;
     }
   }
+};
+module.exports.schema = {
+  type: `
+  type links {
+    id: Int!
+    catagoryid:Int!
+    title: String
+    link: String
+}
+type linkPaginate {
+    count : Int!
+    page: Int!
+    rows : [links]!
+}`,
+  query: `links(size: Int!,page: Int!) : linkPaginate
+  filterLinks(catagoryid:Int!): [links]!
+  `,
+  mutation: `editLinks(id: Int,catagoryid: Int!title: String!,link: String): links
+  deleteLinks(id: Int!): Boolean
+  `
 };

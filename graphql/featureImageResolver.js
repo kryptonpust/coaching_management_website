@@ -1,6 +1,6 @@
-const { featureimages } = require("../../models/index");
+const { featureimages } = require("../models/index");
 
-module.exports = {
+module.exports.resolver = {
   allFeatureimages: async args => {
     try {
       const result = await featureimages.findAll();
@@ -73,4 +73,17 @@ module.exports = {
       throw err;
     }
   }
+};
+
+module.exports.schema = {
+  type: `
+  type featureimages {
+    id: Int!
+    src: String!
+}`,
+  query: `allFeatureimages: [featureimages]!
+  `,
+  mutation: `editFeatureimages(id: Int,src: String): featureimages
+  deleteFeatureimages(src: String!): Boolean
+  `
 };

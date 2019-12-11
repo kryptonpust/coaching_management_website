@@ -1,9 +1,9 @@
-const { chapters } = require("../../models/index");
+const { sessions } = require("../models/index");
 
-module.exports = {
-  allChapters: async (args, req) => {
+module.exports.resolver = {
+  allSessions: async (args, req) => {
     try {
-      const result = await chapters.findAll();
+      const result = await sessions.findAll();
       //   console.log(result);
       return result;
     } catch (err) {
@@ -11,12 +11,12 @@ module.exports = {
       throw err;
     }
   },
-  chapters: async (args, req) => {
+  sessions: async (args, req) => {
     if (!req.isAuth) throw new Error("UnAuthenticated");
     const lim = args.size;
     const off = args.page * lim;
     try {
-      const result = await chapters.findAndCountAll({
+      const result = await sessions.findAndCountAll({
         limit: lim,
         offset: off
       });
@@ -29,12 +29,12 @@ module.exports = {
     }
   },
 
-  editChapters: async (args, req) => {
+  editSessions: async (args, req) => {
     if (!req.isAuth) throw new Error("UnAuthenticated");
     const id = args.id;
     if (!id) {
       try {
-        return await chapters.create({
+        return await sessions.create({
           title: args.title
         });
       } catch (err) {
@@ -43,7 +43,7 @@ module.exports = {
       }
     }
     try {
-      await chapters.update(
+      await sessions.update(
         {
           title: args.title
         },
@@ -59,11 +59,11 @@ module.exports = {
       throw err;
     }
   },
-  deleteChapters: async (args, req) => {
+  deleteSessions: async (args, req) => {
     if (!req.isAuth) throw new Error("UnAuthenticated");
     const id = args.id;
     try {
-      const result = await chapters.destroy({
+      const result = await sessions.destroy({
         where: {
           id: id
         }
@@ -75,4 +75,22 @@ module.exports = {
       throw err;
     }
   }
+};
+module.exports.schema = {
+  type: `
+  type sessions{
+    id: Int!
+    title: String
+}
+type sessionPaginate {
+    count : Int!
+    page: Int!
+    rows : [sessions]!
+}`,
+  query: `allSessions: [sessions]!
+  sessions(size: Int!,page: Int!) : sessionPaginate
+  `,
+  mutation: `editSessions(id: Int,title: String!): sessions
+  deleteSessions(id: Int!): Boolean
+  `
 };

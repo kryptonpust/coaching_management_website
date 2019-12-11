@@ -2,8 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const graphqlhttp = require("express-graphql");
 const { sequelize } = require("./models/index");
-const RootSchema = require("./graphql/schemas/index");
-const RootResolver = require("./graphql/resolvers/index");
+const graphqlConfig = require("./graphql/index");
 const isAuth = require("./middleware/isAuth");
 const storage = require("./storage");
 const path = require("path");
@@ -62,8 +61,8 @@ app.use(
 app.use(
   "/api",
   graphqlhttp({
-    schema: RootSchema,
-    rootValue: RootResolver,
+    schema: graphqlConfig.schema,
+    rootValue: graphqlConfig.resolver,
     graphiql: true
   })
 );

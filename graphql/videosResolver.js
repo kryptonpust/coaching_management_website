@@ -1,6 +1,6 @@
-const { videos } = require("../../models/index");
+const { videos } = require("../models/index");
 
-module.exports = {
+module.exports.resolver = {
   filterVideos: async args => {
     try {
       const result = await videos.findAll({
@@ -80,4 +80,28 @@ module.exports = {
       throw err;
     }
   }
+};
+module.exports.schema = {
+  type: `
+  type videos {
+    id: Int!
+    chapterid: Int!
+    title: String
+    file: String
+    updatedAt: Date!
+}
+type videoPaginate {
+    count : Int!
+    page: Int!
+    rows : [videos]!
+}
+`,
+  query: `
+  videos(size: Int!,page: Int!) : videoPaginate
+  filterVideos(chapterid: Int!): [videos]!
+  `,
+  mutation: `
+  editVideos(id: Int,chapterid: Int!,title: String!,file: String): videos
+    deleteVideos(id: Int!): Boolean
+  `
 };

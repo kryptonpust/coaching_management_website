@@ -1,8 +1,8 @@
-const { Users } = require("../../models/index");
+const { Users } = require("../models/index");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-module.exports = {
+module.exports.resolver = {
   users: async (args, req) => {
     if (!req.isAuth) throw new Error("UnAuthenticated");
     try {
@@ -50,4 +50,34 @@ module.exports = {
     );
     return { id: admin.id, token: token, access: input.access };
   }
+};
+module.exports.schema = {
+  type: `
+  type Users {
+    id: Int!
+    name: String!
+    email: String!
+    phone: String
+}
+type jwt{
+    id: Int!
+    token: String!
+    access: String!
+}
+input login {
+    email: String!
+    password: String!
+    access: String
+}
+input UserInput {
+    name: String!
+    email: String!
+    password : String!
+    phone: String
+}`,
+  query: `users: [Users!]!
+  login(credentials: login): jwt!
+  `,
+  mutation: `createUser(userInput: UserInput!): Users!
+  `
 };

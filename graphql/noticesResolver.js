@@ -1,6 +1,6 @@
-const { notices } = require("../../models/index");
+const { notices } = require("../models/index");
 
-module.exports = {
+module.exports.resolver = {
   latestNotices: async (args, req) => {
     // if (!req.isAuth) throw new Error("UnAuthenticated");
     const lim = args.size;
@@ -88,4 +88,25 @@ module.exports = {
       throw err;
     }
   }
+};
+module.exports.schema = {
+  type: `
+  type notices {
+    id: Int!
+    title: String
+    file: String
+    updatedAt: Date!
+}
+type noticePaginate {
+    count : Int!
+    page: Int!
+    rows : [notices]!
+}`,
+  query: `notices(size: Int!,page: Int!) : noticePaginate
+  allNotices: [notices]!
+  latestNotices(size: Int!): [notices]!
+  `,
+  mutation: `editNotices(id: Int,title: String!,file: String): notices
+  deleteNotices(id: Int!): Boolean
+`
 };

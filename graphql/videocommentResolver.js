@@ -1,7 +1,7 @@
-const { videocomments } = require("../../models/index");
+const { videocomments } = require("../models/index");
 
 
-module.exports = {
+module.exports.resolver = {
   filterVideocomments: async args => {
     try {
       const result = await videocomments.findAll({
@@ -79,4 +79,22 @@ module.exports = {
       throw err;
     }
   }
+};
+module.exports.schema = {
+  type: `
+  type videocomments {
+    id: Int!
+    videoid: Int!
+    title: String
+    comment: String
+    updatedAt: Date!
+}
+`,
+  query: `
+  filterVideocomments(videoid: Int!): [videocomments]!
+  `,
+  mutation: `
+  editVideocomments(videoid: Int!,title: String!,comment: String!): videocomments!
+
+  `
 };

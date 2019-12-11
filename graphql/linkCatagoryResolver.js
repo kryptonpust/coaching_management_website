@@ -1,9 +1,10 @@
-const { sessions } = require("../../models/index");
+const { linkCatagories } = require("../models/index");
 
-module.exports = {
-  allSessions: async (args, req) => {
+
+module.exports.resolver = {
+  allLinkCatagories: async args => {
     try {
-      const result = await sessions.findAll();
+      const result = await linkCatagories.findAll();
       //   console.log(result);
       return result;
     } catch (err) {
@@ -11,12 +12,12 @@ module.exports = {
       throw err;
     }
   },
-  sessions: async (args, req) => {
+  linkCatagories: async (args, req) => {
     if (!req.isAuth) throw new Error("UnAuthenticated");
     const lim = args.size;
     const off = args.page * lim;
     try {
-      const result = await sessions.findAndCountAll({
+      const result = await linkCatagories.findAndCountAll({
         limit: lim,
         offset: off
       });
@@ -29,12 +30,12 @@ module.exports = {
     }
   },
 
-  editSessions: async (args, req) => {
+  editLinkCatagories: async (args, req) => {
     if (!req.isAuth) throw new Error("UnAuthenticated");
     const id = args.id;
     if (!id) {
       try {
-        return await sessions.create({
+        return await linkCatagories.create({
           title: args.title
         });
       } catch (err) {
@@ -43,7 +44,7 @@ module.exports = {
       }
     }
     try {
-      await sessions.update(
+      await linkCatagories.update(
         {
           title: args.title
         },
@@ -59,11 +60,11 @@ module.exports = {
       throw err;
     }
   },
-  deleteSessions: async (args, req) => {
+  deleteLinkCatagories: async (args, req) => {
     if (!req.isAuth) throw new Error("UnAuthenticated");
     const id = args.id;
     try {
-      const result = await sessions.destroy({
+      const result = await linkCatagories.destroy({
         where: {
           id: id
         }
@@ -75,4 +76,22 @@ module.exports = {
       throw err;
     }
   }
+};
+module.exports.schema = {
+  type: `
+  type linkCatagories{
+    id: Int!
+    title: String
+}
+type linkCatagoriesPaginate {
+    count : Int!
+    page: Int!
+    rows : [linkCatagories]!
+}`,
+  query: ` allLinkCatagories: [linkCatagories]!
+  linkCatagories(size: Int!,page: Int!) : linkCatagoriesPaginate
+  `,
+  mutation: `editLinkCatagories(id: Int,title: String!): linkCatagories
+  deleteLinkCatagories(id: Int!): Boolean
+  `
 };

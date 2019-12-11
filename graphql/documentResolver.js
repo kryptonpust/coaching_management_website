@@ -1,10 +1,10 @@
-const { Documents } = require("../../models/index");
+const { Documents } = require("../models/index");
 
 
 const aboutUs = "aboutUs";
 const profile = "Profile";
 const propic= "profilepic";
-module.exports = {
+module.exports.resolver = {
   aboutUs: async () => {
     try {
       return await Documents.findOne({ where: { title: aboutUs } });
@@ -130,4 +130,18 @@ module.exports = {
       throw err;
     }
   }
+};
+module.exports.schema = {
+  type: `
+  type Dochtml{
+    page: String
+}`,
+  query: `profile: Dochtml!
+  profilePic: Dochtml!
+  aboutUs: Dochtml!
+  `,
+  mutation: `editProfile(html: String!): Dochtml!
+  editProfilePic(html: String!): Dochtml!
+  editAboutUs(html: String!): Dochtml!
+  `
 };
