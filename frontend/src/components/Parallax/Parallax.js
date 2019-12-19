@@ -65,7 +65,7 @@ const useStyles = makeStyles(parallaxStyle);
 async function netrequest(s = "") {
   if (s === "") throw new Error("query can not be emapy");
   const result = await axios.post(
-    "/api",
+    "/backend/api",
     JSON.stringify({ query: s }),
     {
       headers: {

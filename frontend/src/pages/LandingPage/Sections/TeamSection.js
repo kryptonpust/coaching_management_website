@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
 async function netrequest(s = "", html) {
   if (s === "") throw new Error("query can not be empty");
   const result = await axios.post(
-    "/api",
+    "/backend/api",
     JSON.stringify({
       query: s,
       variables: {

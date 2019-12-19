@@ -80,7 +80,7 @@ const editorconfg = {
     // formData.append=('image',blobInfo);
     formData.append("file", blobInfo.blob());
     axios
-      .post("/files", formData, {
+      .post("/backend/files", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: "Bearer " + token
@@ -100,7 +100,7 @@ const editorconfg = {
 async function netrequest(s = "", html) {
   if (s === "") throw new Error("query can not be emapy");
   const result = await axios.post(
-    "/api",
+    "/backend/api",
     JSON.stringify({
       query: s,
       variables: {
@@ -202,7 +202,7 @@ export default props => {
             const data = new FormData();
             data.append("file", event.target.files[0]);
             const result = await axios.post(
-              "/files",
+              "/backend/files",
               data
             );
             const query= await netrequest(`mutation test($text: String!){

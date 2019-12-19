@@ -31,7 +31,7 @@ let token;
 async function netrequest(s = "") {
   if (s === "") throw new Error("query can not be emapy");
   const result = await axios.post(
-    "/api",
+    "/backend/api",
     JSON.stringify({ query: s }),
     {
       headers: {
@@ -46,7 +46,7 @@ async function netrequest(s = "") {
 async function upload(file) {
   const formdata = new FormData();
   formdata.append("file", file);
-  const result = await axios.post("/files", formdata, {
+  const result = await axios.post("/backend/files", formdata, {
     headers: {
       // "Content-Type": "application/json",
       Authorization: "Bearer " + token

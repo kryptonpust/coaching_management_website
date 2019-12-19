@@ -50,7 +50,7 @@ let token;
 
 async function netrequest(s = "") {
   if (s === "") throw new Error("query can not be emapy");
-  const result = await axios.post("/api", JSON.stringify({ query: s }), {
+  const result = await axios.post("/backend/api", JSON.stringify({ query: s }), {
     headers: {
       "Content-Type": "application/json",
       Authorization: "Bearer " + token

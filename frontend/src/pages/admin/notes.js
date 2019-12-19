@@ -47,7 +47,7 @@ let token;
 async function netrequest(s = "") {
   if (s === "") throw new Error("query can not be emapy");
   const result = await axios.post(
-    "/api",
+    "/backend/api",
     JSON.stringify({ query: s }),
     {
       headers: {
@@ -102,7 +102,7 @@ export default function Notes(props) {
                   const data = new FormData();
                   data.append("file", event.target.files[0]);
                   const result = await axios.post(
-                    "/files",
+                    "/backend/files",
                     data
                   );
                   props.onChange(result.data.url);

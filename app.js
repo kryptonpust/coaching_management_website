@@ -24,7 +24,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use(express.static(path.join(__dirname, "./frontend/build")));
+// app.use(express.static(path.join(__dirname, "./frontend/build")));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS");
@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 
 app.use(isAuth);
 app.use(
-  "/files",
+  "/backend/files",
   storage({
     storageDir: "./files",
     tmpDir: "./temp-uploads",
@@ -49,7 +49,7 @@ app.use(
       res.send({
         uploaded: true,
         url:
-          `${process.env.SERVER_PATH}/files` +
+          `${process.env.SERVER_PATH}/backend/files` +
           result.path +
           result.uuid +
           result.ext
@@ -59,7 +59,7 @@ app.use(
 );
 
 app.use(
-  "/api",
+  "/backend/api",
   graphqlhttp({
     schema: graphqlConfig.schema,
     rootValue: graphqlConfig.resolver,
@@ -67,13 +67,13 @@ app.use(
   })
 );
 
-app.get("/", function(req, res) {
-  res.sendFile(path.join(__dirname, "frontend/build", "index.html"));
-});
+// app.get("/", function(req, res) {
+//   res.sendFile(path.join(__dirname, "frontend/build", "index.html"));
+// });
 
-app.get("*", function(req, res) {
-  res.redirect("/");
-});
+// app.get("*", function(req, res) {
+//   res.redirect("/");
+// });
 sequelize
   .authenticate()
   .then(() => {
