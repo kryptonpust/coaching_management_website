@@ -7,14 +7,15 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import ReactLoading from "react-loading";
 
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     "flex-wrap": "wrap",
     margin: theme.spacing(2),
-    "align-items": "flex-start"
+    "align-items": "flex-start",
+    justifyContent: "center"
   },
   list: {
     display: "flex",
@@ -50,8 +51,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-
-
 async function netrequest(s = "") {
   if (s === "") throw new Error("query can not be emapy");
   const result = await axios.post(
@@ -68,12 +67,15 @@ async function netrequest(s = "") {
 }
 export default function LinksPage(props) {
   const classes = useStyles();
+  const [loadingnav, setLoadingnav] = useState(true);
+  const [loadingpage, setLoadingpage] = useState(true);
+
   const [listdata, setListData] = useState([]);
   const [pagedata, setPageData] = useState([]);
   const [linkid, setLinkid] = useState(0);
-  const [clicked, setClicked] = useState(Array(listdata.length).fill(false));
 
   useEffect(() => {
+    setLoadingnav(true);
     async function getdata() {
       const result = await netrequest(`
       query{
@@ -83,12 +85,16 @@ export default function LinksPage(props) {
         }
       }`);
       setListData(result.allLinkCatagories);
+      if (result.allLinkCatagories.length) {
+        setLinkid(result.allLinkCatagories[0].id);
+      }
+      setLoadingnav(false);
     }
     getdata();
   }, []);
   useEffect(() => {
+    setLoadingpage(true);
     async function getdata() {
-      console.log(`fetching data for list ${linkid}`);
       const result = await netrequest(`
       query {
         filterLinks(catagoryid:${linkid})
@@ -98,27 +104,28 @@ export default function LinksPage(props) {
         }
       }`);
       setPageData(result.filterLinks);
+      setLoadingpage(false);
     }
     getdata();
   }, [linkid]);
   return (
-      <div className={classes.root}>
-        <Paper className={classes.list}>
+    <div className={classes.root}>
+      <Paper
+        className={classes.list}
+        style={loadingnav ? { justifyContent: "center" } : {}}
+      >
+        {loadingnav ? (
+          <ReactLoading type={"balls"} color={"#ff0000"} />
+        ) : (
           <List component="nav" aria-label="main">
             {listdata.map(data => {
               return (
                 <ListItem
                   button
                   key={data.id}
-                  className={clicked[data.id - 1] ? classes.active : ""}
+                  className={data.id === linkid ? classes.active : ""}
                   onClick={() => {
                     setLinkid(data.id);
-                    setClicked(prev =>
-                      Array.from(prev, (x, index) => {
-                        if (index === data.id - 1) return !x;
-                        return false;
-                      })
-                    );
                   }}
                 >
                   <ListItemText primary={data.title} />
@@ -126,32 +133,39 @@ export default function LinksPage(props) {
               );
             })}
           </List>
-        </Paper>
-        <Paper className={classes.page}>
-          <div className={classes.pageContent}>
-            {pagedata.length === 0
-              ? "Click on Catagory to view Links"
-              : pagedata.map((data, index) => {
-                  return (
-                    <ExpansionPanel
-                      key={index}
-                      className={classes.expansionPanel}
-                    >
-                      <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1bh-content"
-                        id="panel1bh-header"
-                      >
-                        <Typography>{data.title}</Typography>
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
-                        <Link target="_blank" rel="noopener" href={data.link}>{data.link}</Link>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                  );
-                })}
-          </div>
-        </Paper>
-      </div>
+        )}
+      </Paper>
+      <Paper className={classes.page}>
+        <div
+          className={classes.pageContent}
+          style={loadingpage ? { alignItems: "center" } : {}}
+        >
+          {loadingpage ? (
+            <ReactLoading type={"balls"} color={"#0000ff"} />
+          ) : pagedata.length === 0 ? (
+            "Click on Catagory to view Links"
+          ) : (
+            pagedata.map((data, index) => {
+              return (
+                <ExpansionPanel key={index} className={classes.expansionPanel}>
+                  <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1bh-content"
+                    id="panel1bh-header"
+                  >
+                    <Typography>{data.title}</Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Link target="_blank" rel="noopener" href={data.link}>
+                      {data.link}
+                    </Link>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              );
+            })
+          )}
+        </div>
+      </Paper>
+    </div>
   );
 }

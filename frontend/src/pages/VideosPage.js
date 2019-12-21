@@ -3,6 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import VideoCard from "./VideoCard";
+import ReactLoading from "react-loading";
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
@@ -48,7 +50,10 @@ const useStyles = makeStyles(theme => ({
       "justify-content": "center",
       "flex-grow": 1
     }
-  }
+  },
+  active: {
+    color: "red"
+  },
 }));
 
 async function netrequest(s = "") {
@@ -70,9 +75,11 @@ export default function VideosPage(props) {
   const [listdata, setListData] = useState([]);
   const [pagedata, setPageData] = useState([]);
   const [linkid, setLinkid] = useState(0);
-  const [clicked, setClicked] = useState(Array(listdata.length).fill(false));
+  const [loadingnav, setLoadingnav] = useState(true);
+  const [loadingpage, setLoadingpage] = useState(true);
 
   useEffect(() => {
+    setLoadingnav(true);
     async function getchapter() {
       const result = await netrequest(`
                 query {
@@ -82,10 +89,15 @@ export default function VideosPage(props) {
                     }
                   }`);
       setListData(result.allChapters);
+      if (result.allChapters.length) {
+        setLinkid(result.allChapters[0].id);
+      }
+      setLoadingnav(false);
     }
     getchapter();
   }, []);
   useEffect(() => {
+    setLoadingpage(true);
     async function getdata() {
       const result = await netrequest(`
             query {
@@ -98,52 +110,58 @@ export default function VideosPage(props) {
               }
             }`);
       setPageData(result.filterVideos);
+      setLoadingpage(false);
     }
     getdata();
   }, [linkid]);
   return (
     <div className={classes.root}>
-      <Paper className={classes.list}>
-        <List component="nav" aria-label="main">
-          {listdata.map(data => {
-            return (
-              <ListItem
-                button
-                key={data.id}
-                className={clicked[data.id - 1] ? classes.active : ""}
-                onClick={() => {
-                  setLinkid(data.id);
-                  setClicked(prev =>
-                    Array.from(prev, (x, index) => {
-                      if (index === data.id - 1) return !x;
-                      return false;
-                    })
-                  );
-                }}
-              >
-                <ListItemText primary={data.title} />
-              </ListItem>
-            );
-          })}
-        </List>
+      <Paper
+        className={classes.list}
+        style={loadingnav ? { justifyContent: "center" } : {}}
+      >
+        {loadingnav ? (
+          <ReactLoading type={"balls"} color={"#ff0000"} />
+        ) : (
+          <List component="nav" aria-label="main">
+            {listdata.map(data => {
+              return (
+                <ListItem
+                  button
+                  key={data.id}
+                  className={data.id === linkid ? classes.active : ""}
+                  onClick={() => {
+                    setLinkid(data.id);
+                  }}
+                >
+                  <ListItemText primary={data.title} />
+                </ListItem>
+              );
+            })}
+          </List>
+        )}
       </Paper>
       <Paper className={classes.page}>
         <div className={classes.pageContent}>
-          <List className={classes.noticelist}>
-            {pagedata.length === 0
-              ? "Click on chapters to view Videos"
-              : pagedata.map((data, index) => {
-                  return (
-                    <VideoCard
-                      key={index}
-                      id={data.id}
-                      title={data.title}
-                      link={data.file}
-                      time={data.updatedAt}
-                    />
-                  );
-                })}
-          </List>
+          {loadingpage ? (
+            <ReactLoading type={"balls"} color={"#0000ff"} />
+          ) : (
+            <List className={classes.noticelist}>
+              {pagedata.length === 0
+                ? "Click on chapters to view Videos"
+                : pagedata.map((data, index) => {
+                    return (
+                      <VideoCard
+                        key={index}
+                        id={data.id}
+                        title={data.title}
+                        link={data.file}
+                        time={data.updatedAt}
+                      />
+                    );
+                  })}
+            </List>
+          )}
         </div>
       </Paper>
     </div>

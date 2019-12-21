@@ -1,7 +1,16 @@
-import { Button, Divider, List, ListItem, ListItemSecondaryAction, ListItemText, Paper } from "@material-ui/core";
+import {
+  Button,
+  Divider,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  Paper
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import ReactLoading from "react-loading";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -44,7 +53,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-
 async function netrequest(s = "") {
   if (s === "") throw new Error("query can not be emapy");
   const result = await axios.post(
@@ -63,9 +71,11 @@ export default function NoticePage(props) {
   const classes = useStyles();
 
   const [pagedata, setPageData] = useState([]);
-  const [linkid ] = useState();
+  const [loading, setLoading] = useState(true);
+  const [linkid] = useState();
 
   useEffect(() => {
+    setLoading(true);
     async function getdata() {
       const result = await netrequest(`
       query{
@@ -75,13 +85,20 @@ export default function NoticePage(props) {
         }
       }`);
       setPageData(result.allNotices);
+      setLoading(false);
     }
     getdata();
   }, [linkid]);
   return (
-      <div className={classes.root}>
-        <Paper className={classes.page}>
-          <div className={classes.pageContent}>
+    <div className={classes.root}>
+      <Paper className={classes.page}>
+        <div
+          className={classes.pageContent}
+          style={loading ? { justifyContent: "center" } : {}}
+        >
+          {loading ? (
+            <ReactLoading type={"balls"} color={"#0000ff"} />
+          ) : (
             <List className={classes.noticelist}>
               {pagedata.length === 0
                 ? "Notice Board is Empty"
@@ -107,8 +124,9 @@ export default function NoticePage(props) {
                     );
                   })}
             </List>
-          </div>
-        </Paper>
-      </div>
+          )}
+        </div>
+      </Paper>
+    </div>
   );
 }

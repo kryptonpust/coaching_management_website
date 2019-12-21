@@ -8,8 +8,7 @@ import Footer from "components/Footer/Footer.js";
 import Parallax from "components/Parallax/Parallax.js";
 import he from "he";
 import React from "react";
-
-
+import ReactLoading from "react-loading";
 
 const useStyles = makeStyles(styles);
 async function netrequest(s = "", html) {
@@ -35,6 +34,7 @@ async function netrequest(s = "", html) {
 export default function ProfilePage(props) {
   const [details, setdetails] = React.useState("");
   const [propic, setpropic] = React.useState("");
+  const [loading, setLoading] = React.useState(true);
   React.useEffect(() => {
     async function getdata() {
       try {
@@ -47,10 +47,12 @@ export default function ProfilePage(props) {
     getdata();
   }, []);
   React.useEffect(() => {
+    setLoading(true);
     async function getdata() {
       try {
         const result = await netrequest(`query{profilePic{page}}`);
         setpropic(result.profilePic.page);
+        setLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -63,34 +65,29 @@ export default function ProfilePage(props) {
     classes.imgRoundedCircle,
     classes.imgFluid
   );
- 
+
   return (
     <div>
-      {/* <Header
-        color="transparent"
-        brand="Material Kit React"
-        rightLinks={<HeaderLinks />}
-        fixed
-        changeColorOnScroll={{
-          height: 200,
-          color: "white"
-        }}
-        {...rest}
-      /> */}
       <Parallax small filter />
-      <div className={classNames(classes.main, classes.mainRaised)}>
-        <div className={classes.profile}>
-          <img src={propic} alt="..." className={imageClasses} />
-          {/* <iframe srcDoc={he.decode(details)}  */}
-        </div>
-        <div
-          style={{
-            "text-align": "initial",
-            margin: "1rem",
-            marginTop: "-80px"
-          }}
-          dangerouslySetInnerHTML={{ __html: he.decode(details) }}
-        ></div>
+      <div className={classNames(classes.main, classes.mainRaised)} style={loading? {display:'flex',justifyContent:'center'}:{}}>
+        {loading ? (
+          <ReactLoading type={"balls"} color={"#ff0000"} />
+        ) : (
+          <React.Fragment>
+            <div className={classes.profile}>
+              <img src={propic} alt="..." className={imageClasses} />
+              {/* <iframe srcDoc={he.decode(details)}  */}
+            </div>
+            <div
+              style={{
+                "text-align": "initial",
+                margin: "1rem",
+                marginTop: "-80px"
+              }}
+              dangerouslySetInnerHTML={{ __html: he.decode(details) }}
+            ></div>
+          </React.Fragment>
+        )}
       </div>
       <Footer />
     </div>
