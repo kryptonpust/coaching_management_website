@@ -8,6 +8,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -110,6 +111,12 @@ export default function LinksPage(props) {
   }, [linkid]);
   return (
     <div className={classes.root}>
+      <Helmet>
+        <meta
+          name="description"
+          content="Contains all the necessary links which are essential for students"
+        />
+      </Helmet>
       <Paper
         className={classes.list}
         style={loadingnav ? { justifyContent: "center" } : {}}

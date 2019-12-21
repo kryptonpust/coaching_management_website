@@ -14,6 +14,7 @@ import "./landingPage.css";
 // Sections for this page
 import ProductSection from "./Sections/ProductSection.js";
 import TeamSection from "./Sections/TeamSection.js";
+import { Helmet } from "react-helmet";
 
 async function netrequest(s = "") {
   if (s === "") throw new Error("query can not be emapy");
@@ -65,6 +66,9 @@ export default function LandingPage(props) {
   // const { ...rest } = props;
   return (
     <div>
+      <Helmet>
+        <meta name="description" content="A Speical ICT Private Program in Pabna." />
+      </Helmet>
       {/* <h1>Binary ICT Point</h1> */}
       {/* <Header
         color="transparent"
@@ -143,7 +147,7 @@ export default function LandingPage(props) {
                               component={Link}
                               target="_blank"
                               href={res.file}
-                              style={{background: 'aliceblue'}}
+                              style={{ background: "aliceblue" }}
                             >
                               <ListItemText
                                 primary={res.title}

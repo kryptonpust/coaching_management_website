@@ -11,6 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -91,6 +92,12 @@ export default function NoticePage(props) {
   }, [linkid]);
   return (
     <div className={classes.root}>
+      <Helmet>
+        <meta
+          name="description"
+          content="Contains notices for students. Continiously check it daily."
+        />
+      </Helmet>
       <Paper className={classes.page}>
         <div
           className={classes.pageContent}

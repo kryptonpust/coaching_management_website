@@ -4,6 +4,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import VideoCard from "./VideoCard";
 import ReactLoading from "react-loading";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -116,6 +117,12 @@ export default function VideosPage(props) {
   }, [linkid]);
   return (
     <div className={classes.root}>
+      <Helmet>
+        <meta
+          name="description"
+          content="Special ICT videos for Students."
+        />
+      </Helmet>
       <Paper
         className={classes.list}
         style={loadingnav ? { justifyContent: "center" } : {}}

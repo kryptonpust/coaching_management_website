@@ -1,5 +1,5 @@
 const { images } = require("../models/index");
-
+const fs = require('fs');
 module.exports.resolver = {
   filterImages: async args => {
     try {
@@ -65,18 +65,22 @@ module.exports.resolver = {
   deleteImages: async (args, req) => {
     if (!req.isAuth) throw new Error("UnAuthenticated");
     const src = args.src;
-    try {
-      const result = await images.destroy({
-        where: {
-          link: src
-        }
-      });
-      console.log(result);
-      return result;
-    } catch (err) {
-      // console.log(err)
-      throw err;
-    }
+    fs.unlink('../public_html'+src,async function(err){
+      try {
+        if(err) throw err;
+        const result = await images.destroy({
+          where: {
+            link: src
+          }
+        });
+        console.log(result);
+        return result;
+      } catch (err) {
+        // console.log(err)
+        throw err;
+      }
+    })
+    
   }
 };
 module.exports.schema = {

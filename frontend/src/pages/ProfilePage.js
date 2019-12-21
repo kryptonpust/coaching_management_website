@@ -9,6 +9,7 @@ import Parallax from "components/Parallax/Parallax.js";
 import he from "he";
 import React from "react";
 import ReactLoading from "react-loading";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(styles);
 async function netrequest(s = "", html) {
@@ -68,8 +69,20 @@ export default function ProfilePage(props) {
 
   return (
     <div>
+      <Helmet>
+        <meta
+          name="description"
+          content="Joy Shahriar
+          Student of Information and Communication Engineering.
+          Pabna UNiversity of Science & Technology.
+          Director at Binary ICT POINT"
+        />
+      </Helmet>
       <Parallax small filter />
-      <div className={classNames(classes.main, classes.mainRaised)} style={loading? {display:'flex',justifyContent:'center'}:{}}>
+      <div
+        className={classNames(classes.main, classes.mainRaised)}
+        style={loading ? { display: "flex", justifyContent: "center" } : {}}
+      >
         {loading ? (
           <ReactLoading type={"balls"} color={"#ff0000"} />
         ) : (

@@ -4,6 +4,7 @@ import { Image } from "@zzwing/react-image";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -120,6 +121,12 @@ export default function PhotosPage(props) {
   }, [dirty, linkid]);
   return (
     <div className={classes.root}>
+      <Helmet>
+        <meta
+          name="description"
+          content="Binary ICT Point Students Photo Gallery. Student photos are organized as batchwise"
+        />
+      </Helmet>
       <Paper
         className={classes.list}
         style={loadingnav ? { justifyContent: "center" } : {}}

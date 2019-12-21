@@ -11,6 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -115,6 +116,12 @@ export default function NotesPage(props) {
   }, [linkid]);
   return (
     <div className={classes.root}>
+      <Helmet>
+        <meta
+          name="description"
+          content="Contains Special ICT Notes for students"
+        />
+      </Helmet>
       <Paper
         className={classes.list}
         style={loadingnav ? { justifyContent: "center" } : {}}
