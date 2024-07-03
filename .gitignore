@@ -2,3 +2,5 @@ node_modules
 files
 temp-uploads
 config
+db_data
+.env

@@ -5,26 +5,12 @@ const { sequelize } = require("./models/index");
 const graphqlConfig = require("./graphql/index");
 const isAuth = require("./middleware/isAuth");
 const storage = require("./storage");
-const path = require("path");
-// const Sequelize = require("sequelize");
-
-// const sequelize = new Sequelize(
-//   process.env.DB_NAME,
-//   process.env.DB_USER,
-//   process.env.DB_PASSWORD,
-//   {
-//     host: "localhost",
-//     dialect: "mysql"
-//   }
-// );
 
 const app = express();
 
-// const events = [];
 
 app.use(bodyParser.json());
 
-// app.use(express.static(path.join(__dirname, "./frontend/build")));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS");
@@ -39,8 +25,8 @@ app.use(isAuth);
 app.use(
   "/backend/files",
   storage({
-    storageDir: "./files",
-    tmpDir: "./temp-uploads",
+    storageDir: process.env.STORAGE_DIR ?? "./files",
+    tmpDir: process.env.TEMP_DIR ?? "./temp-uploads",
     maxUploadSize: 1024 * 1024 * 50, // 50 megabytes
     pictureQuality: 90,
     maxPicturePixels: 3840 * 2160, // 4K
@@ -78,7 +64,10 @@ sequelize
   .authenticate()
   .then(() => {
     app.listen(5000);
+    console.log("Connection has been established successfully.");
+    console.log("Server running on port 5000");
   })
   .catch(err => {
     console.error("Unable to connect to the database:", err);
   });
+

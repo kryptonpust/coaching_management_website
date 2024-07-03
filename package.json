@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
-    "baal": "node check.js"
-
+    "migrate": "sequelize db:migrate",
+    "seed": "sequelize db:seed:all"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +15,7 @@
     "@date-io/date-fns": "^1.3.11",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "dotenv": "^16.4.5",
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
     "graphql": "^14.5.8",

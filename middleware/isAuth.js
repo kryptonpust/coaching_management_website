@@ -1,21 +1,21 @@
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
-  const authheader = req.get("Authorization");
+  const authHeader = req.get("Authorization");
   
-  if (!authheader) {
+  if (!authHeader) {
     req.isAuth = false;
     return next();
   }
 
-  const token = authheader.split(' ')[1];
+  const token = authHeader.split(' ')[1];
   if (!token) {
     req.isAuth = false;
     return next();
   }
-  let decodedtoken;
+  let decodedToken;
   try {
-    decodedtoken = jwt.verify(token, process.env.JWT_PRIVATE);
+    decodedToken = jwt.verify(token, process.env.JWT_PRIVATE);
   } catch (err) {
     req.isAuth = false;
     return next();
@@ -23,6 +23,6 @@ module.exports = (req, res, next) => {
   
   
   req.isAuth = true;
-  req.userid = decodedtoken.userid;
+  req.userid = decodedToken.userid;
   next();
 };

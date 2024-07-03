@@ -1,3 +1,4 @@
+const path = require("path");
 const { images } = require("../models/index");
 const fs = require('fs');
 module.exports.resolver = {
@@ -64,13 +65,18 @@ module.exports.resolver = {
   },
   deleteImages: async (args, req) => {
     if (!req.isAuth) throw new Error("UnAuthenticated");
-    const src = args.src;
-    fs.unlink('../public_html'+src,async function(err){
+    const url = new URL(args.src);
+    if(!url.pathname.startsWith('/backend/files'))
+      throw new Error("Invalid URL");
+    
+    const src = url.pathname.replace('/backend/files', '/files');
+    console.log(path.join(__dirname, '../',src));
+    fs.unlink(path.join(__dirname, '../', src),async function(err){
       try {
         if(err) throw err;
         const result = await images.destroy({
           where: {
-            link: src
+            link: args.src
           }
         });
         console.log(result);
