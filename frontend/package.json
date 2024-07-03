@@ -26,7 +26,7 @@
     "react-player": "^1.14.2",
     "react-router-dom": "^5.1.2",
     "react-swipeable-views": "^0.13.3",
-    "tinymce": "^5.1.5"
+    "tinymce": "^7.2.0"
   },
   "scripts": {
     "start": "GENERATE_SOURCEMAP=false react-scripts start",
